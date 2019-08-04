@@ -1,0 +1,12 @@
+{
+    "name": "montopolis/montopolis-slack",
+    "description": "Provides a layer of abstraction between Montopolis apps and third-party Slack client library.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Montopolis",
+            "email": "babul@montopolis.com"
+        }
+    ],
+    "require": {}
+}
