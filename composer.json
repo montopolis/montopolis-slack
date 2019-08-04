@@ -8,5 +8,20 @@
             "email": "babul@montopolis.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "Montopolis\\Slack\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Montopolis\\Slack\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.3"
+    }
 }
