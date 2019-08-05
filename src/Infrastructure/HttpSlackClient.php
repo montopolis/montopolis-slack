@@ -44,9 +44,9 @@ class HttpSlackClient implements SlackClient
     /**
      * @param string $token
      * @param array $payload
-     * @return bool
+     * @return \stdClass
      */
-    protected function sendApiRequest(string $token, array $payload): bool
+    protected function sendApiRequest(string $token, array $payload): \stdClass
     {
         $client = new Client(['base_uri' => self::BASE_URI]);
 
