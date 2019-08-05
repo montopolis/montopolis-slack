@@ -1,58 +1,79 @@
 # Montopolis Slack #
 
-Provides a consistent, reliable wrapper around the Slack `chat.postMessage` API which can be used across all Montpolis apps.
+Provides a consistent, reliable wrapper around the Slack `chat.postMessage` API which can be used across all Montopolis apps.
 
-## Setting up apps ##
+## Setting up Slack App ##
 
-https://api.slack.com/apps
-
-Click "OAuth & Permissions"
-
-Select scopes:
-
-* Send messages as Slashnode Test App (`chat:write:bot`)
-* Send messages as user (`chat:write:user`) ???
-
-Copy the OAuth access token at the top of the page.
+Before you can use the library, you need to set up a OAuth-enabled Slack App. You can that [here](https://api.slack.com/apps).
+ 
+1. Click "OAuth & Permissions"
+1. Select the scope: "Send messages as ___ App (`chat:write:bot`)"
+1. Copy the OAuth access token at the top of the page.
 
 ## Testing ##
 
 ```bash
-./vendor/bin/phpunit
+./vendor/bin/phpunit tests/
+PHPUnit 8.3.3 by Sebastian Bergmann and contributors.
+
+............                                                      12 / 12 (100%)
+
+Time: 105 ms, Memory: 6.00 MB
+
+OK (12 tests, 12 assertions)
 ```
 
-## Usage ##
+## General Usage ##
 
 ```php
 <?php
 
-$client = new \Montopolis\Slack\Slack([
-    'api' => '???' 
-]);
+###
+# For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
+ 
+function slack() {
+    $config = new \Montopolis\Slack\Infrastructure\Laravel\ArraySlackConfigurationRepository([
+        'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general'],
+    ]);
+    $client = new \Montopolis\Slack\Infrastructure\Http\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+    return new Fluent($client);
+}
 
-$message = new \Montopolis\Slack\Domain\Message([
-    'channel' => '#general',
-    'message' => 'This is the message',
-    'sender' => 'Name of the Sender',
-    'attachments' => [
-        new \Montopolis\Slack\Domain\Attachment([
-            'something' => 'something_else',
-        ]),    
-    ],
-    'blocks' => [
-        new \Montopolis\Slack\Domain\Block([]),    
-    ],
-]);
+# It can then be used as such:
 
-$client->sendMessage($message);
+slack()
+    ->channel('support')
+    ->message('This is the Slack Message')
+    ->send();
 ```
 
-or via helper:
+## Laravel Usage ##
+
+The only difference with Laravel is that we'll typically lean on the app container to resolve dependencies for us:
 
 ```php
 <?php
 
-# Needs to be set up in `helpers.php` 
-slack()->message();
-slack()->messageWithAttachments();
+    # In AppServiceProvider.php:...
+    public function register()
+    {
+        $this->app->bind(Fluent::class, function ($app) {
+            $config = new \Montopolis\Slack\Infrastructure\Laravel\ArraySlackConfigurationRepository(config('services'));
+            $client = new \Montopolis\Slack\Infrastructure\Http\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+            return new Fluent($client);
+        });
+    }
+    # etc...
+    
+    # In helpers.php:...
+    function slack() {
+        return app()->make(Fluent::class);
+    }
+    # etc...
+    
+    # In application:
+    slack()
+        ->channel('support')
+        ->message('This is sent from a Laravel app')
+        ->send();
 ```

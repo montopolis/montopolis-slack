@@ -12,7 +12,7 @@ class Message
 
     ###
     # See https://api.slack.com/methods/chat.postMessage
-    protected $keys = [
+    protected static $keys = [
         'channel',
         'text',
         'as_user',
@@ -28,24 +28,23 @@ class Message
         'unfurl_links',
         'unfurl_media',
         'username',
+        'token',
     ];
 
     public function __construct($attrs = [])
     {
         foreach ($attrs as $key => $_) {
-            Assertion::inArray($key, $this->keys);
+            Assertion::inArray($key, self::$keys);
         }
 
         ###
         # Required
-        Assertion::keyExists($attrs, 'channel');
-        Assertion::string($attrs['channel']);
-
         Assertion::keyExists($attrs, 'text');
         Assertion::string($attrs['text']);
 
         ###
         # Optional
+        if (isset($attrs['channel'])) Assertion::string($attrs['channel']);
         if (isset($attrs['as_user'])) Assertion::boolean($attrs['as_user']);
         if (isset($attrs['attachments'])) Assertion::isArray($attrs['attachments']);
         if (isset($attrs['blocks'])) Assertion::isArray($attrs['blocks']);
@@ -59,12 +58,18 @@ class Message
         if (isset($attrs['unfurl_links'])) Assertion::boolean($attrs['unfurl_links']);
         if (isset($attrs['unfurl_media'])) Assertion::boolean($attrs['unfurl_media']);
         if (isset($attrs['username'])) Assertion::string($attrs['username']);
+        if (isset($attrs['token'])) Assertion::string($attrs['token']);
 
         $this->attrs = $attrs;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attrs;
+    }
+
+    public static function getKeys(): array
+    {
+        return self::$keys;
     }
 }

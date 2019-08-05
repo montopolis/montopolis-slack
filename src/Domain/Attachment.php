@@ -10,6 +10,9 @@ class Attachment
 
     public function __construct(array $attrs = [])
     {
+        ###
+        # @todo: protected domain-layer with data validation
+
         $this->attrs = $attrs;
     }
 

@@ -9,39 +9,59 @@ use GuzzleHttp\Exception\RequestException;
 use Montopolis\Slack\Application\MessageTransformer;
 use Montopolis\Slack\Domain\Message;
 use Montopolis\Slack\Domain\SlackClient;
-use Montopolis\Slack\Domain\SlackCredentialsRepository;
+use Montopolis\Slack\Domain\SlackConfigurationRepository;
 
 class HttpSlackClient implements SlackClient
 {
-    protected $credentialsRepository;
+    protected $configurationRepository;
     protected $transformer;
 
-    public function __construct(SlackCredentialsRepository $credentialsRepository, MessageTransformer $transformer)
+    const BASE_URI = 'https://slack.com/api/';
+
+    public function __construct(SlackConfigurationRepository $configurationRepository, MessageTransformer $transformer)
     {
-        $this->credentialsRepository = $credentialsRepository;
+        $this->configurationRepository = $configurationRepository;
         $this->transformer = $transformer;
     }
 
+    /**
+     * @param Message $message
+     * @return bool
+     */
     public function sendMessage(Message $message): bool
     {
-        # @todo: handle response failures
-        $credential = $this->credentialsRepository->getCredentials();
-        return !! $this->sendApiRequest($credential->getToken(), $this->transformer->toArray($message));
+        $token = $this->configurationRepository->getCredentials()->getToken();
+
+        $payload = $this->transformer->toArray($message);
+
+        if (empty($payload['channel'])) {
+            $payload['channel'] = $this->configurationRepository->getDefaultChannel();
+        }
+
+        return !! $this->sendApiRequest($token, $payload);
     }
 
-    protected function sendApiRequest($token, $payload)
+    /**
+     * @param string $token
+     * @param array $payload
+     * @return bool
+     */
+    protected function sendApiRequest(string $token, array $payload): bool
     {
-        $client = new Client([
-            'base_uri' => 'https://slack.com/api/',
-        ]);
+        $client = new Client(['base_uri' => self::BASE_URI]);
+
+        $uri = 'chat.postMessage';
 
         try {
-            $response = $client->post('chat.postMessage', [
-                'headers' => [
-                    'Authorization' => "Bearer {$token}",
-                ],
+
+            $headers = ['Authorization' => "Bearer {$token}"];
+
+            $response = $client->post($uri, [
+                'headers' => $headers,
                 'json' => $payload,
             ]);
+
+            return json_decode(''.$response->getBody()->getContents());
 
         } catch (RequestException $ex) {
 

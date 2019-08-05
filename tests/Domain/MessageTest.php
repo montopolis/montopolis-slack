@@ -12,7 +12,7 @@ class MessageTest extends TestCase
 {
     public function test_it_is_instantiable()
     {
-        $this->assertInstanceOf(Message::class, new Message(['channel' => 'fake-channel', 'text' => 'Message']));
+        $this->assertInstanceOf(Message::class, new Message(['text' => 'Message']));
     }
 
     public function test_it_requires_valid_attributes()

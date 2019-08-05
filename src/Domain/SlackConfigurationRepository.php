@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Montopolis\Slack\Domain;
 
-interface SlackCredentialsRepository
+interface SlackConfigurationRepository
 {
     public function getCredentials(): SlackCredentials;
+
+    public function getDefaultChannel(): string;
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Montopolis\Slack\Infrastructure\Laravel;
 
 use Montopolis\Slack\Domain\SlackCredentials;
-use Montopolis\Slack\Domain\SlackCredentialsRepository;
+use Montopolis\Slack\Domain\SlackConfigurationRepository;
 
-class LaravelSlackCredentialsRepository implements SlackCredentialsRepository
+class ArraySlackConfigurationRepository implements SlackConfigurationRepository
 {
     protected $config;
 
@@ -18,7 +18,11 @@ class LaravelSlackCredentialsRepository implements SlackCredentialsRepository
 
     public function getCredentials(): SlackCredentials
     {
-        # @todo: is this the best way to handle it?
         return new SlackCredentials($this->config['slack']['token']);
+    }
+
+    public function getDefaultChannel(): string
+    {
+        return $this->config['slack']['channel'] ?? 'general';
     }
 }
