@@ -18,19 +18,19 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
 ###
 # For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
  
-function slack() {
+function slack(): \Montopolis\Slack\Fluent {
     $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository([
         'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general'],
     ]);
     $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
-    return new Fluent($client);
+    return new \Montopolis\Slack\Fluent($client);
 }
 
 # It can then be used as such:
 
 slack()
     ->channel('support')
-    ->message('This is the Slack Message')
+    ->text('This is the Slack Message')
     ->send();
 ```
 
@@ -44,27 +44,27 @@ The only difference with Laravel is that we'll typically lean on the app contain
     # In AppServiceProvider.php:...
     public function register()
     {
-        $this->app->bind(Fluent::class, function ($app) {
+        $this->app->bind(\Montopolis\Slack\Fluent::class, function ($app) {
             
             # This assumes config/services.php has a `slack` key containing `token` and `default_channel`:
             $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository(config('services'));
             
             $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
-            return new Fluent($client);
+            return new \Montopolis\Slack\Fluent($client);
         });
     }
     # etc...
     
     # In helpers.php:...
-    function slack() {
-        return app()->make(Fluent::class);
+    function slack(): \Montopolis\Slack\Fluent {
+        return app()->make(\Montopolis\Slack\Fluent::class);
     }
     # etc...
     
     # In application:
     slack()
         ->channel('support')
-        ->message('This is sent from a Laravel app')
+        ->text('This is sent from a Laravel app')
         ->send();
 ```
 
