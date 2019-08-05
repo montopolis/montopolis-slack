@@ -8,20 +8,7 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
  
 1. Click "OAuth & Permissions"
 1. Select the scope: "Send messages as ___ App (`chat:write:bot`)"
-1. Copy the OAuth access token at the top of the page.
-
-## Testing ##
-
-```bash
-./vendor/bin/phpunit tests/
-PHPUnit 8.3.3 by Sebastian Bergmann and contributors.
-
-............                                                      12 / 12 (100%)
-
-Time: 105 ms, Memory: 6.00 MB
-
-OK (12 tests, 12 assertions)
-```
+1. Copy the OAuth access token at the top of the page. This will be used in the instructions below.
 
 ## General Usage ##
 
@@ -32,10 +19,10 @@ OK (12 tests, 12 assertions)
 # For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
  
 function slack() {
-    $config = new \Montopolis\Slack\Infrastructure\Laravel\ArraySlackConfigurationRepository([
+    $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository([
         'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general'],
     ]);
-    $client = new \Montopolis\Slack\Infrastructure\Http\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+    $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
     return new Fluent($client);
 }
 
@@ -58,8 +45,11 @@ The only difference with Laravel is that we'll typically lean on the app contain
     public function register()
     {
         $this->app->bind(Fluent::class, function ($app) {
-            $config = new \Montopolis\Slack\Infrastructure\Laravel\ArraySlackConfigurationRepository(config('services'));
-            $client = new \Montopolis\Slack\Infrastructure\Http\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+            
+            # This assumes config/services.php has a `slack` key containing `token` and `default_channel`:
+            $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository(config('services'));
+            
+            $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
             return new Fluent($client);
         });
     }
@@ -77,3 +67,20 @@ The only difference with Laravel is that we'll typically lean on the app contain
         ->message('This is sent from a Laravel app')
         ->send();
 ```
+
+## Run the tests
+
+```bash
+./vendor/bin/phpunit tests/
+PHPUnit 8.3.3 by Sebastian Bergmann and contributors.
+
+............                                                      12 / 12 (100%)
+
+Time: 105 ms, Memory: 6.00 MB
+
+OK (12 tests, 12 assertions)
+```
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.

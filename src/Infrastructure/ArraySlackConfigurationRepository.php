@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Montopolis\Slack\Infrastructure\Laravel;
+namespace Montopolis\Slack\Infrastructure;
 
 use Montopolis\Slack\Domain\SlackCredentials;
 use Montopolis\Slack\Domain\SlackConfigurationRepository;
@@ -23,6 +23,6 @@ class ArraySlackConfigurationRepository implements SlackConfigurationRepository
 
     public function getDefaultChannel(): string
     {
-        return $this->config['slack']['channel'] ?? 'general';
+        return $this->config['slack']['default_channel'] ?? 'general';
     }
 }

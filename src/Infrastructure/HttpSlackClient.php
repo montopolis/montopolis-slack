@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Montopolis\Slack\Infrastructure\Http;
+namespace Montopolis\Slack\Infrastructure;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
