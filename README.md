@@ -21,9 +21,14 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
 function slack(): \Montopolis\Slack\Fluent 
 {
     $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository([
-        'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general', 'fallback_to_default' => true],
+        'slack' => [
+            'token' => '___oauth-token-from-above___', 
+            'default_channel' => 'general',
+            'fallback_to_default' => true
+        ],
     ]);
-    $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+    $transformer = new \Montopolis\Slack\Application\MessageTransformer();
+    $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, $transformer);
     return new \Montopolis\Slack\Fluent($client);
 }
 
@@ -50,7 +55,8 @@ The only difference with Laravel is that we'll typically lean on the app contain
             # This assumes config/services.php has a `slack` key containing `token` and `default_channel`:
             $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository(config('services'));
             
-            $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
+            $transformer = new \Montopolis\Slack\Application\MessageTransformer();
+            $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, $transformer);
             return new \Montopolis\Slack\Fluent($client);
         });
     }
@@ -72,7 +78,7 @@ The only difference with Laravel is that we'll typically lean on the app contain
 
 ## Sending blocks
 
-You can use the (Block Kit Builder)[https://api.slack.com/tools/block-kit-builder] to design your blocks. It should be posted as a PHP array as shown below: 
+You can use the [Block Kit Builder](https://api.slack.com/tools/block-kit-builder) to template/lay-out your blocks. It should be sent as a PHP array (_not_ JSON) as shown below: 
 
 ```php
 <?php
