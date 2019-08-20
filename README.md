@@ -18,7 +18,8 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
 ###
 # For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
  
-function slack(): \Montopolis\Slack\Fluent {
+function slack(): \Montopolis\Slack\Fluent 
+{
     $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository([
         'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general'],
     ]);
@@ -56,7 +57,8 @@ The only difference with Laravel is that we'll typically lean on the app contain
     # etc...
     
     # In helpers.php:...
-    function slack(): \Montopolis\Slack\Fluent {
+    function slack(): \Montopolis\Slack\Fluent 
+    {
         return app()->make(\Montopolis\Slack\Fluent::class);
     }
     # etc...
@@ -66,6 +68,55 @@ The only difference with Laravel is that we'll typically lean on the app contain
         ->channel('support')
         ->text('This is sent from a Laravel app')
         ->send();
+```
+
+## Sending blocks
+
+You can use the (Block Kit Builder)[https://api.slack.com/tools/block-kit-builder] to design your blocks. It should be posted as a PHP array as shown below: 
+
+```php
+<?php
+
+    slack()
+        ->channel('support')
+        ->blocks([
+            [
+                "type" => "section",
+                "text" => [
+                    "type" => "mrkdwn",
+                    "text" => "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a restaurant:*"
+                ],
+            ],
+            [
+                "type" => "divider",
+            ],
+            [
+                "type" => "section",
+                "text" => [
+                    "type" => "mrkdwn",
+                    "text" => "*Farmhouse Thai Cuisine*\n:star::star::star::star: 1528 reviews\n They do have some vegan options, like the roti and curry, plus they have a ton of salad stuff and noodles can be ordered without meat!! They have something for everyone here"
+                ],
+                "accessory" => [
+                    "type" => "image",
+                    "image_url" => "https://s3-media3.fl.yelpcdn.com/bphoto/c7ed05m9lC2EmA3Aruue7A/o.jpg",
+                    "alt_text" => "alt text for image"
+                ],
+            ],
+            [
+                "type" => "actions",
+                "elements" => [
+                    [
+                        "type" => "button",
+                        "text" => [
+                            "type" => "plain_text",
+                            "text" => "Farmhouse",
+                            "emoji" => true,
+                        ],
+                        "value" => "click_me_123",
+                    ],
+                ]
+            ],
+        ]);
 ```
 
 ## Run the tests
