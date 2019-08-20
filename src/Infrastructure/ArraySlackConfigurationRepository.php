@@ -25,4 +25,10 @@ class ArraySlackConfigurationRepository implements SlackConfigurationRepository
     {
         return $this->config['slack']['default_channel'] ?? 'general';
     }
+
+    public function getFallbackToDefault(): bool
+    {
+        return !empty($this->config['slack']['fallback_to_default'])
+            ? $this->config['slack']['fallback_to_default'] : false;
+    }
 }

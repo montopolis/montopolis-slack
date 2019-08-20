@@ -21,7 +21,7 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
 function slack(): \Montopolis\Slack\Fluent 
 {
     $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository([
-        'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general'],
+        'slack' => ['token' => '___oauth-token-from-above___', 'default_channel' => 'general', 'fallback_to_default' => true],
     ]);
     $client = new \Montopolis\Slack\Infrastructure\HttpSlackClient($config, new \Montopolis\Slack\Application\MessageTransformer());
     return new \Montopolis\Slack\Fluent($client);

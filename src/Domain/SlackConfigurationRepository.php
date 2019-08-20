@@ -9,4 +9,6 @@ interface SlackConfigurationRepository
     public function getCredentials(): SlackCredentials;
 
     public function getDefaultChannel(): string;
+
+    public function getFallbackToDefault(): bool;
 }
