@@ -35,14 +35,14 @@ class MessageTransformerTest extends TestCase
     {
         $t = new MessageTransformer();
         $input = [
-            'channel' => '?',
-            'text' => '',
+            'channel'     => '?',
+            'text'        => '',
             'attachments' => [
                 [
                     'title' => '???',
-                    'text' => '?????',
-                ]
-            ]
+                    'text'  => '?????',
+                ],
+            ],
         ];
         $m = new Message($input);
         $output = $t->toArray($m);
@@ -53,18 +53,18 @@ class MessageTransformerTest extends TestCase
     {
         $t = new MessageTransformer();
         $input = ['channel' => '___', 'text' => '!!!', 'attachments' => [
-                new Attachment([
-                    'title' => '111',
-                    'text' => '111111',
-                ]),
-                new Attachment([
-                    'title' => '222',
-                    'text' => '222222',
-                ]),
-            ]
+            new Attachment([
+                'title' => '111',
+                'text'  => '111111',
+            ]),
+            new Attachment([
+                'title' => '222',
+                'text'  => '222222',
+            ]),
+        ],
         ];
         $expected = [
-            'channel' => '___', 'text' => '!!!', 'attachments' => [['title' => '111', 'text' => '111111'], ['title' => '222', 'text' => '222222']]
+            'channel' => '___', 'text' => '!!!', 'attachments' => [['title' => '111', 'text' => '111111'], ['title' => '222', 'text' => '222222']],
         ];
         $m = new Message($input);
         $output = $t->toArray($m);

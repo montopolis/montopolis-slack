@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Montopolis\Slack\Infrastructure;
 
-use Montopolis\Slack\Domain\SlackCredentials;
 use Montopolis\Slack\Domain\SlackConfigurationRepository;
+use Montopolis\Slack\Domain\SlackCredentials;
 
 class ArraySlackConfigurationRepository implements SlackConfigurationRepository
 {

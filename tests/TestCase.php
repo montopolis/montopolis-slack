@@ -6,5 +6,4 @@ namespace Montopolis\Slack\Tests;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-
 }

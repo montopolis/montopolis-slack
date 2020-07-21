@@ -29,6 +29,7 @@ class MessageTransformer
         foreach ($attrs as $element) {
             $array[] = is_array($element) ? $element : $element->getAttributes();
         }
+
         return $array;
     }
 }

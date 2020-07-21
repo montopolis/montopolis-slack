@@ -10,8 +10,8 @@ class Message
 {
     protected $attrs;
 
-    ###
-    # See https://api.slack.com/methods/chat.postMessage
+    //##
+    // See https://api.slack.com/methods/chat.postMessage
     protected static $keys = [
         'channel',
         'text',
@@ -37,28 +37,58 @@ class Message
             Assertion::inArray($key, self::$keys);
         }
 
-        ###
-        # Required
+        //##
+        // Required
         Assertion::keyExists($attrs, 'text');
         Assertion::string($attrs['text']);
 
-        ###
-        # Optional
-        if (isset($attrs['channel'])) Assertion::string($attrs['channel']);
-        if (isset($attrs['as_user'])) Assertion::boolean($attrs['as_user']);
-        if (isset($attrs['attachments'])) Assertion::isArray($attrs['attachments']);
-        if (isset($attrs['blocks'])) Assertion::isArray($attrs['blocks']);
-        if (isset($attrs['icon_emoji'])) Assertion::string($attrs['icon_emoji']);
-        if (isset($attrs['icon_url'])) Assertion::url($attrs['icon_url']);
-        if (isset($attrs['link_names'])) Assertion::boolean($attrs['link_names']);
-        if (isset($attrs['mrkdwn'])) Assertion::boolean($attrs['mrkdwn']);
-        if (isset($attrs['parse'])) Assertion::string($attrs['parse']);
-        if (isset($attrs['reply_broadcast'])) Assertion::boolean($attrs['reply_broadcast']);
-        if (isset($attrs['thread_ts'])) Assertion::string($attrs['thread_ts']);
-        if (isset($attrs['unfurl_links'])) Assertion::boolean($attrs['unfurl_links']);
-        if (isset($attrs['unfurl_media'])) Assertion::boolean($attrs['unfurl_media']);
-        if (isset($attrs['username'])) Assertion::string($attrs['username']);
-        if (isset($attrs['token'])) Assertion::string($attrs['token']);
+        //##
+        // Optional
+        if (isset($attrs['channel'])) {
+            Assertion::string($attrs['channel']);
+        }
+        if (isset($attrs['as_user'])) {
+            Assertion::boolean($attrs['as_user']);
+        }
+        if (isset($attrs['attachments'])) {
+            Assertion::isArray($attrs['attachments']);
+        }
+        if (isset($attrs['blocks'])) {
+            Assertion::isArray($attrs['blocks']);
+        }
+        if (isset($attrs['icon_emoji'])) {
+            Assertion::string($attrs['icon_emoji']);
+        }
+        if (isset($attrs['icon_url'])) {
+            Assertion::url($attrs['icon_url']);
+        }
+        if (isset($attrs['link_names'])) {
+            Assertion::boolean($attrs['link_names']);
+        }
+        if (isset($attrs['mrkdwn'])) {
+            Assertion::boolean($attrs['mrkdwn']);
+        }
+        if (isset($attrs['parse'])) {
+            Assertion::string($attrs['parse']);
+        }
+        if (isset($attrs['reply_broadcast'])) {
+            Assertion::boolean($attrs['reply_broadcast']);
+        }
+        if (isset($attrs['thread_ts'])) {
+            Assertion::string($attrs['thread_ts']);
+        }
+        if (isset($attrs['unfurl_links'])) {
+            Assertion::boolean($attrs['unfurl_links']);
+        }
+        if (isset($attrs['unfurl_media'])) {
+            Assertion::boolean($attrs['unfurl_media']);
+        }
+        if (isset($attrs['username'])) {
+            Assertion::string($attrs['username']);
+        }
+        if (isset($attrs['token'])) {
+            Assertion::string($attrs['token']);
+        }
 
         $this->attrs = $attrs;
     }

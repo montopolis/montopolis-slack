@@ -26,6 +26,7 @@ class HttpSlackClient implements SlackClient
 
     /**
      * @param Message $message
+     *
      * @return bool
      */
     public function sendMessage(Message $message): bool
@@ -42,8 +43,8 @@ class HttpSlackClient implements SlackClient
 
         $response = $this->sendApiRequest($token, $payload);
 
-        ###
-        # If there's a "channel not found" error we can fallback to the default channel:
+        //##
+        // If there's a "channel not found" error we can fallback to the default channel:
         if ($this->isChannelNotFound($response) && !$this->isDefaultChannel($payload['channel'])) {
             if ($this->configurationRepository->getFallbackToDefault()) {
                 $payload['channel'] = $defaultChannel;
@@ -76,7 +77,8 @@ class HttpSlackClient implements SlackClient
 
     /**
      * @param string $token
-     * @param array $payload
+     * @param array  $payload
+     *
      * @return \stdClass
      */
     protected function sendApiRequest(string $token, array $payload): \stdClass
@@ -86,18 +88,15 @@ class HttpSlackClient implements SlackClient
         $uri = 'chat.postMessage';
 
         try {
-
             $headers = ['Authorization' => "Bearer {$token}"];
 
             $response = $client->post($uri, [
                 'headers' => $headers,
-                'json' => $payload,
+                'json'    => $payload,
             ]);
 
             return json_decode(''.$response->getBody()->getContents());
-
         } catch (RequestException $ex) {
-
             throw $ex;
         }
     }
