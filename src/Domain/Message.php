@@ -10,8 +10,7 @@ class Message
 {
     protected $attrs;
 
-    ###
-    # See https://api.slack.com/methods/chat.postMessage
+    // See https://api.slack.com/methods/chat.postMessage
     protected static $keys = [
         'channel',
         'text',
@@ -37,13 +36,11 @@ class Message
             Assertion::inArray($key, self::$keys);
         }
 
-        ###
-        # Required
+        // Required
         Assertion::keyExists($attrs, 'text');
         Assertion::string($attrs['text']);
 
-        ###
-        # Optional
+        // Optional
         if (isset($attrs['channel'])) Assertion::string($attrs['channel']);
         if (isset($attrs['as_user'])) Assertion::boolean($attrs['as_user']);
         if (isset($attrs['attachments'])) Assertion::isArray($attrs['attachments']);

@@ -15,8 +15,7 @@ Before you can use the library, you need to set up a OAuth-enabled Slack App. Yo
 ```php
 <?php
 
-###
-# For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
+// For convenience, it's recommended that you wrap the `Fluent` helper in a global function: 
  
 function slack(): \Montopolis\Slack\Fluent 
 {
@@ -32,7 +31,7 @@ function slack(): \Montopolis\Slack\Fluent
     return new \Montopolis\Slack\Fluent($client);
 }
 
-# It can then be used as such:
+// It can then be used as such:
 
 slack()
     ->channel('support')
@@ -47,12 +46,12 @@ The only difference with Laravel is that we'll typically lean on the app contain
 ```php
 <?php
 
-    # In AppServiceProvider.php:...
+    // In AppServiceProvider.php:...
     public function register()
     {
         $this->app->bind(\Montopolis\Slack\Fluent::class, function ($app) {
             
-            # This assumes config/services.php has a `slack` key containing `token` and `default_channel`:
+            // This assumes config/services.php has a `slack` key containing `token` and `default_channel`:
             $config = new \Montopolis\Slack\Infrastructure\ArraySlackConfigurationRepository(config('services'));
             
             $transformer = new \Montopolis\Slack\Application\MessageTransformer();
@@ -60,16 +59,16 @@ The only difference with Laravel is that we'll typically lean on the app contain
             return new \Montopolis\Slack\Fluent($client);
         });
     }
-    # etc...
+    // etc...
     
-    # In helpers.php:...
+    // In helpers.php:...
     function slack(): \Montopolis\Slack\Fluent 
     {
         return app()->make(\Montopolis\Slack\Fluent::class);
     }
-    # etc...
+    // etc...
     
-    # In application:
+    // In application:
     slack()
         ->channel('support')
         ->text('This is sent from a Laravel app')

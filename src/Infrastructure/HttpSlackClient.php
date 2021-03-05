@@ -40,10 +40,11 @@ class HttpSlackClient implements SlackClient
             $payload['channel'] = $defaultChannel;
         }
 
-        $response = $this->sendApiRequest($token, $payload);
+        if (!$response = $this->sendApiRequest($token, $payload)) {
+            return false;
+        }
 
-        ###
-        # If there's a "channel not found" error we can fallback to the default channel:
+        // If there's a "channel not found" error we can fallback to the default channel:
         if ($this->isChannelNotFound($response) && !$this->isDefaultChannel($payload['channel'])) {
             if ($this->configurationRepository->getFallbackToDefault()) {
                 $payload['channel'] = $defaultChannel;
@@ -79,7 +80,7 @@ class HttpSlackClient implements SlackClient
      * @param array $payload
      * @return \stdClass
      */
-    protected function sendApiRequest(string $token, array $payload): \stdClass
+    protected function sendApiRequest(string $token, array $payload): ?\stdClass
     {
         $client = new Client(['base_uri' => self::BASE_URI]);
 
@@ -97,7 +98,6 @@ class HttpSlackClient implements SlackClient
             return json_decode(''.$response->getBody()->getContents());
 
         } catch (RequestException $ex) {
-
             throw $ex;
         }
     }
